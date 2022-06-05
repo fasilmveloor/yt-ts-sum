@@ -5,7 +5,7 @@ from youtube_transcript_api.formatters import TextFormatter
 
 # Flask Imports
 from flask import Flask, jsonify, request, send_from_directory, render_template, redirect
-
+from flask_cors import CORS
 # NLTK Imports
 import nltk
 
@@ -17,12 +17,13 @@ from summarizer import gensim_summarize, spacy_summarize, nltk_summarize, sumy_l
     sumy_text_rank_summarize
 
 # Waitress Import for Serving at Heroku
-from waitress import serve
+#from waitress import serve
 
 
 def create_app():
     # Creating Flask Object and returning it.
     app = Flask(__name__)
+    CORS(app)
 
     # "Punkt" download before nltk tokenization
     try:
@@ -52,6 +53,10 @@ def create_app():
         video_id = request.args.get('id')  # video_id of the YouTube Video
         percent = request.args.get('percent')  # percentage of the summary
         choice = request.args.get('choice')  # summarization choice
+        print(request.args)
+        print('video_id:', video_id)
+        print('percent: ', percent)
+        print('choice: ', choice)
 
         # Checking whether all parameters exist or not
         if video_id and percent and choice:
@@ -79,8 +84,8 @@ def create_app():
 
                             # Summarizing Formatted Text based upon the request's choice
                             if choice == "gensim-sum":
-                                summary = gensim_summarize(formatted_text,
-                                                           percent)  # Gensim Library for TextRank Based Summary.
+                                #summary = gensim_summarize(formatted_text,percent)  # Gensim Library for TextRank Based Summary.
+                                summary = ''
                             elif choice == "spacy-sum":
                                 summary = spacy_summarize(formatted_text,
                                                           percent)  # Spacy Library for frequency-based summary.
